@@ -1,0 +1,72 @@
+/* Anda dapat menempatkan body styling di layout.main Anda atau biarkan di sini */
+/* body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    overflow: hidden;
+} */
+
+.icon-container {
+    position: relative;
+    cursor: pointer;
+    width: 20px; /* Sesuaikan ukuran ikon di sini */
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    /* Tambahkan margin atau padding jika perlu */
+}
+
+.icon-container svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    transform-origin: center;
+    fill: currentColor; /* Agar warna ikon bisa diatur dengan color */
+}
+
+.icon-container .icon-initial {
+    opacity: 1;
+    transform: rotateY(0deg);
+}
+
+.icon-container.transformed .icon-initial {
+    opacity: 0;
+    transform: rotateY(180deg);
+}
+
+.icon-container .icon-transformed {
+    opacity: 0;
+    transform: rotateY(-180deg); /* Start rotated for flip effect */
+}
+
+.icon-container.transformed .icon-transformed {
+    opacity: 1;
+    transform: rotateY(0deg);
+}
+
+/* Particle effect styles */
+.particle {
+    position: absolute;
+    background-color: #007bff; /* Warna percikan */
+    border-radius: 50%;
+    opacity: 0;
+    animation: explode 0.8s forwards;
+    pointer-events: none; /* Make particles not interfere with clicks */
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(1);
+        opacity: 0;
+    }
+}
