@@ -11,6 +11,8 @@
     <!-- External CSS (if any, e.g., Bootstrap Icons, DataTables CSS) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+
+    @stack('styles')
   </head>
   <body>
 

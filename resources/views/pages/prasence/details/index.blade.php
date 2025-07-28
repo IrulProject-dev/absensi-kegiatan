@@ -42,6 +42,11 @@
                         <td> : </td>
                         <td>{{  date('H:i', strtotime($prasence->tgl_kegiatan)) }}</td>
                     </tr>
+                    <tr>
+                        <td>Lokasi</td>
+                        <td> : </td>
+                        <td>{{ $prasence->latitude }}, {{ $prasence->longitude }}</td>
+                    </tr>
                 </table>
                 {{-- <table class="table table-striped ">
                     <thead>

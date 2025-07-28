@@ -28,6 +28,9 @@ class prasencesDataTable extends DataTable
             ->addColumn('waktu_mulai', function($query){
                 return date('H:i', strtotime($query->tgl_kegiatan));
             })
+            ->addColumn('lokasi', function($query){
+                return $query->latitude . ', ' . $query->longitude;
+            })
             ->addColumn('action', function($query){
                 $btnDetail = "<a href='".route('prasence.show',$query->id)."' class='btn btn-secondary mx-1'>Detail</a>";
                 $btnEdit = "<a href='".route('prasence.edit',$query->id)."' class='btn btn-warning mx-1'>Edit</a>";
@@ -82,6 +85,7 @@ class prasencesDataTable extends DataTable
             Column::make('nama_kegiatan'),
             Column::make('tgl'),
             Column::make('waktu_mulai'),
+            Column::make('lokasi'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)

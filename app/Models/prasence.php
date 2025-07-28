@@ -11,6 +11,9 @@ class prasence extends Model
         'slug',
         'tgl_kegiatan',
         'user_id',
+        'latitude',
+        'longitude',
+        'radius'
     ];
 
     public function user()

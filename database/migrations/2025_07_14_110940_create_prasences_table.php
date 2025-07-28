@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('slug');
             $table->dateTime('tgl_kegiatan');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->unsignedInteger('radius')->nullable();
             // $table->time('waktu_mulai');
             $table->timestamps();
         });

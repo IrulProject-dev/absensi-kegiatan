@@ -40,6 +40,9 @@ class PrasenceController extends Controller
             'nama_kegiatan'=> 'required',
             'tgl_kegiatan'=> 'required',
             'waktu_mulai'=> 'required',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|numeric'
         ]);
 
         $data = [
@@ -47,7 +50,12 @@ class PrasenceController extends Controller
             'slug' => Str::slug($request->nama_kegiatan),
             'tgl_kegiatan' => $request->tgl_kegiatan. ' ' . $request->waktu_mulai,
             'user_id' => auth()->user()->id,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'radius' => $request->radius
         ];
+
+        // dd($data);
 
         prasence::create($data);
 
@@ -71,6 +79,7 @@ class PrasenceController extends Controller
     {
         $prasence = prasence::where('user_id', auth()->user()->id)->findOrFail($id);
 
+
         return view('pages.prasence.edit',compact('prasence'));
     }
 
@@ -84,6 +93,9 @@ class PrasenceController extends Controller
             'nama_kegiatan'=> 'required',
             'tgl_kegiatan'=> 'required',
             'waktu_mulai'=> 'required',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required',
         ]);
 
         // dd($request->all());
@@ -92,6 +104,9 @@ class PrasenceController extends Controller
             'nama_kegiatan'=> $request->nama_kegiatan,
             'slug'=> Str::slug($request->nama_kegiatan),
             'tgl_kegiatan'=> $request->tgl_kegiatan.' '. $request->waktu_mulai,
+            'latitude'=> $request->latitude,
+            'longitude'=> $request->longitude,
+            'radius'=> $request->radius,
         ];
 
         prasence::where('user_id', auth()->user()->id)->findOrFail($id)->update($data);

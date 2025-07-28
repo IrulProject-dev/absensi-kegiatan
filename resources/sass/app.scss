@@ -7,6 +7,9 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+// Icon Animations CSS
+@import '../../public/css/icon-animations.css';
+
 // Custom styles for dropdown on hover
 @media (min-width: 768px) {
   .dropdown:hover .dropdown-menu {

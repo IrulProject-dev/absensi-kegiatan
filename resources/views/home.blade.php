@@ -110,6 +110,7 @@
                                 <tr>
                                     <th>Nama Kegiatan</th>
                                     <th>Tanggal</th>
+                                    <th>Lokasi</th>
                                     <th>Peserta</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -119,6 +120,7 @@
                                 <tr>
                                     <td>{{ $kegiatan->nama_kegiatan }}</td>
                                     <td>{{ \Carbon\Carbon::parse($kegiatan->tgl_kegiatan)->format('d M Y') }}</td>
+                                    <td>{{ $kegiatan->latitude }}, {{ $kegiatan->longitude }}</td>
                                     <td>{{ $kegiatan->detail->count() }}</td>
                                     <td>
                                         <a href="{{ route('prasence.show', $kegiatan->id) }}" class="btn btn-sm btn-info">
