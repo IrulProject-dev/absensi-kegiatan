@@ -8,15 +8,118 @@
     <!-- Styles & Scripts (Managed by Vite) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    <!-- External CSS (if any, e.g., Bootstrap Icons, DataTables CSS) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+
+    <style>
+      :root {
+        --primary-blue-sky: #38b6ff;
+        --primary-blue-dark: #0096ff;
+        --nav-shadow: 0 4px 12px rgba(56, 182, 255, 0.15);
+      }
+
+      /* Modern Navbar */
+      .navbar {
+        background: white !important;
+        box-shadow: var(--nav-shadow);
+        padding: 0.5rem 0;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        color: var(--primary-blue-dark) !important;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-brand::before {
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background: var(--primary-blue-sky);
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .nav-link {
+        color: #555 !important;
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        margin: 0 0.25rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-link:hover, .nav-link.active {
+        color: white !important;
+        background: var(--primary-blue-sky);
+      }
+
+      .nav-link i {
+        margin-right: 6px;
+      }
+
+      .nav-link.active::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 6px;
+        height: 6px;
+        background: var(--primary-blue-sky);
+        border-radius: 50%;
+      }
+
+      .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+      }
+
+      .navbar-toggler:focus {
+        box-shadow: 0 0 0 3px rgba(56, 182, 255, 0.3);
+      }
+
+      /* Dropdown Menu */
+      .dropdown-menu {
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 0.5rem;
+      }
+
+      .dropdown-item {
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        transition: all 0.2s;
+      }
+
+      .dropdown-item:hover {
+        background: var(--primary-blue-sky);
+        color: white !important;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 991.98px) {
+        .navbar-collapse {
+          padding: 1rem 0;
+        }
+
+        .nav-link {
+          margin: 0.25rem 0;
+        }
+      }
+    </style>
 
     @stack('styles')
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
       <div class="container">
         <a class="navbar-brand" href="{{ route('home') }}">{{ env('APP_NAME') }}</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,16 +130,13 @@
             <li class="nav-item">
               <a class="nav-link {{ Route::is('home') ? 'active' : '' }}" {{ Route::is('home') ? 'aria-current=page' : '' }} href="{{ route('home') }}"><i class="bi bi-house-door"></i> Home</a>
             </li>
-            {{-- <li class="nav-item">
-              <a class="nav-link {{ Route::is('absen.index') ? 'active' : '' }}" {{ Route::is('absen.index') ? 'aria-current=page' : '' }} href="{{ route('absen.index', ['slug' => 'your-slug']) }}"><i class="bi bi-card-checklist"></i> Absen</a>
-            </li> --}}
             <li class="nav-item">
               <a class="nav-link {{ Route::is('prasence.index') ? 'active' : '' }}" {{ Route::is('prasence.index') ? 'aria-current=page' : '' }} href="{{ route('prasence.index') }}"><i class="bi bi-calendar-check"></i> Daftar Absensi</a>
             </li>
           </ul>
-          <!-- Right Side Of Navbar -->
+
+          <!-- Right Side Of Navbar (Unchanged Profile Section) -->
           <ul class="navbar-nav ms-auto">
-            <!-- Authentication Links -->
             @guest
               @if (Route::has('login'))
                 <li class="nav-item">
@@ -56,9 +156,6 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  {{-- <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                    <i class="bi bi-pencil-square"></i> {{ __('Edit Profile') }}
-                  </a> --}}
                   <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
                                   document.getElementById('logout-form').submit();">
@@ -80,7 +177,7 @@
         @yield('content')
     </main>
 
-    <!-- External JS (if any, e.g., jQuery, DataTables JS) -->
+    <!-- External JS -->
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.bootstrap5.js"></script>

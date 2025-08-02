@@ -12,7 +12,9 @@ class AbsenController extends Controller
     public function index($slug, AbsenDataTable $dataTable)
     {
         $prasence = prasence::where('slug', $slug)->firstOrFail();
+        dd($prasence);
         return $dataTable->with('prasence_id', $prasence->id)->render('pages.absen.index', compact('prasence'));
+
     }
 
     public function save(Request $request, string $id)

@@ -3,44 +3,156 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ env('APP_NAME') }}</title>
+    <title>{{ env('APP_NAME') }} - Absensi</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #4e73df;
+            --primary-light: #e3ebf7;
+            --danger: #e74a3b;
+            --danger-light: #f8e0dd;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 1.5rem;
+            border-radius: 12px 12px 0 0 !important;
+        }
+        
+        .info-table {
+            width: 100%;
+        }
+        
+        .info-table tr td:first-child {
+            font-weight: 500;
+            color: #4a5568;
+            width: 150px;
+        }
+        
+        .info-table tr td:nth-child(2) {
+            width: 20px;
+        }
+        
+        .form-control {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.625rem 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.2);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+            padding: 0.625rem 1.25rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3d5dd8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline-danger {
+            border-radius: 8px;
+        }
+        
+        .signature-container {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            background-color: white;
+        }
+        
+        #signature-pad {
+            width: 100%;
+            height: 150px;
+            background-color: white;
+        }
+        
+        .modal-header {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .attendance-title {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .row-cols-md-1 > * {
+                flex: 0 0 auto;
+                width: 100%;
+            }
+        }
+    </style>
   </head>
   <body>
-    <div class="container my-5">
-        <div class="card">
-            <div class="card-body mb-4">
-                <h4 class="text-center">Absensi Sekolah</h4>
-                <table class="table table-borderless">
+    <div class="container my-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="text-center attendance-title">
+                    <i class="bi bi-clipboard-check me-2"></i>Absensi Sekolah
+                </h4>
+                <table class="info-table">
                     <tr>
-                        <td width="150">Nama Kegiatan</td>
-                        <td width="20"> : </td>
+                        <td>Nama Kegiatan</td>
+                        <td>:</td>
                         <td>{{ $prasence->nama_kegiatan }}</td>
                     </tr>
                     <tr>
                         <td>Tanggal Kegiatan</td>
-                        <td> : </td>
+                        <td>:</td>
                         <td>{{ date('d-m-Y', strtotime($prasence->tgl_kegiatan)) }}</td>
                     </tr>
                     <tr>
                         <td>Waktu Mulai</td>
-                        <td> : </td>
+                        <td>:</td>
                         <td>{{ date('H:i', strtotime($prasence->tgl_kegiatan)) }}</td>
                     </tr>
                     <tr>
                         <td>Radius (meter)</td>
-                        <td> : </td>
+                        <td>:</td>
                         <td>{{ $prasence->radius }}</td>
                     </tr>
                 </table>
             </div>
         </div>
-        <div class="row my-4">
-            <div class="col-md-3">
-                <div class="card">
+        
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card h-100">
                     <div class="card-header">
-                        <h5 class="card-title">Form Absensi</h5>
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-pencil-square me-2"></i>Form Absensi
+                        </h5>
                     </div>
                     <div class="card-body">
                         <form action="{{ route('absen.save', $prasence->id) }}" method="POST" id="form-absen">
@@ -49,77 +161,80 @@
                             <input type="hidden" id="userLongitude" name="longitude">
 
                             <div class="mb-3">
-                                <label for="name">Nama</label>
-                                <input type="text" class="form-control" id="name" name="name" placeholder="Nama" required>
+                                <label for="name" class="form-label">Nama</label>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama lengkap" required>
                                 @error('name')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label for="jabatan">Jabatan</label>
-                                <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Jabatan" required>
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <input type="text" class="form-control" id="jabatan" name="jabatan" placeholder="Masukkan jabatan" required>
                                 @error('jabatan')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="mb-3">
-                                <label for="asal_instansi">Asal Instansi</label>
-                                <input type="text" class="form-control" id="asal_instansi" name="asal_instansi" placeholder="Asal instansi" required>
+                                <label for="asal_instansi" class="form-label">Asal Instansi</label>
+                                <input type="text" class="form-control" id="asal_instansi" name="asal_instansi" placeholder="Masukkan asal instansi" required>
                                 @error('asal_instansi')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="mb-3">
-                                <label for="tanda_tangan">Tanda Tangan</label>
-                                <div class="d-block form-control mb-2">
+                            <div class="mb-4">
+                                <label for="signature-pad" class="form-label">Tanda Tangan</label>
+                                <div class="signature-container">
                                     <canvas id="signature-pad" class="signature-pad"></canvas>
                                 </div>
                                 <textarea name="signature" id="signature64" class="d-none"></textarea>
                                 @error('signature')
-                                    <div class="text-danger">{{ $message }}</div>
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
-                                <button type="button" class="btn btn-outline-danger" id="clear-signature">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
-                                    </svg>
-                                    Clear
+                                <button type="button" class="btn btn-outline-danger btn-sm" id="clear-signature">
+                                    <i class="bi bi-trash me-1"></i>Hapus
                                 </button>
                             </div>
 
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
-                                Submit
+                            <button type="submit" class="btn btn-primary w-100 py-2" id="submitBtn">
+                                <span id="submitText">Submit Absensi</span>
+                                <span id="submitSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="card">
+            
+            <div class="col">
+                <div class="card h-100">
                     <div class="card-header">
-                        <h5 class="card-title">Daftar Kehadiran</h5>
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-list-check me-2"></i>Daftar Kehadiran
+                        </h5>
                     </div>
                     <div class="card-body">
-                        {{ $dataTable->table() }}
+                        {{ $dataTable->table(['class' => 'table table-hover'], true) }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal untuk pesan error -->
+    <!-- Error Location Modal -->
     <div class="modal fade" id="locationErrorModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">Lokasi Tidak Sesuai</h5>
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Lokasi Tidak Sesuai
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p>Anda berada di luar radius yang ditentukan untuk absensi ini ({{ $prasence->radius }} meter).</p>
-                    <p>Silahkan mendekat ke lokasi kegiatan untuk melakukan absensi.</p>
+                    <p class="mb-0">Silahkan mendekat ke lokasi kegiatan untuk melakukan absensi.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -135,33 +250,36 @@
     <script src="{{ asset('js/signature.min.js') }}"></script>
     <script>
         $(function(){
-            // Inisialisasi signature pad
-            let sig = $('#signature-pad').parent().width();
-            $('#signature-pad').attr('width', sig);
-
-            let signaturePad = new SignaturePad(document.getElementById('signature-pad'), {
+            // Initialize signature pad
+            const canvas = document.getElementById('signature-pad');
+            canvas.width = canvas.offsetWidth;
+            
+            let signaturePad = new SignaturePad(canvas, {
                 backgroundColor: 'rgb(255,255,255,0)',
-                penColor: 'rgb(0,0,0)'
+                penColor: 'rgb(0,0,0)',
+                minWidth: 1,
+                maxWidth: 2
             });
 
             $('#clear-signature').on('click', function(){
                 signaturePad.clear();
+                $('#signature64').val('');
             });
 
-            $('canvas').on('mouseup touchend', function(){
+            canvas.addEventListener('mouseup touchend', function(){
                 $('#signature64').val(signaturePad.toDataURL());
             });
 
-            // Data kegiatan dari server
-            const kegiatanLocation = {
+            // Event data
+            const eventData = {
                 lat: {{ $prasence->latitude }},
                 lng: {{ $prasence->longitude }},
                 radius: {{ $prasence->radius }}
             };
 
-            // Fungsi untuk menghitung jarak antara dua koordinat (dalam meter)
+            // Calculate distance between coordinates
             function getDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371e3; // Radius bumi dalam meter
+                const R = 6371e3; // Earth radius in meters
                 const φ1 = lat1 * Math.PI/180;
                 const φ2 = lat2 * Math.PI/180;
                 const Δφ = (lat2-lat1) * Math.PI/180;
@@ -175,67 +293,67 @@
                 return R * c;
             }
 
-            // Fungsi untuk mendapatkan lokasi pengguna
+            // Get user location
             function getUserLocation() {
                 return new Promise((resolve, reject) => {
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                resolve({
-                                    lat: position.coords.latitude,
-                                    lng: position.coords.longitude
-                                });
-                            },
-                            (error) => {
-                                reject(error);
-                            },
-                            {
-                                enableHighAccuracy: true,
-                                timeout: 5000,
-                                maximumAge: 0
-                            }
+                            (position) => resolve({
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude
+                            }),
+                            (error) => reject(error),
+                            { enableHighAccuracy: true, timeout: 10000 }
                         );
                     } else {
-                        reject(new Error("Geolocation tidak didukung"));
+                        reject(new Error("Geolocation not supported"));
                     }
                 });
             }
 
-            // Handle form submission
+            // Form submission handler
             $('#form-absen').on('submit', async function(e) {
                 e.preventDefault();
-
+                
+                // Validate signature
+                if (signaturePad.isEmpty()) {
+                    alert('Harap berikan tanda tangan terlebih dahulu');
+                    return;
+                }
+                
+                // Update UI
                 const submitBtn = $('#submitBtn');
+                const submitText = $('#submitText');
+                const submitSpinner = $('#submitSpinner');
+                
                 submitBtn.prop('disabled', true);
-                submitBtn.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...');
+                submitText.text('Memproses...');
+                submitSpinner.removeClass('d-none');
 
                 try {
-                    // Dapatkan lokasi pengguna
+                    // Get location
                     const userLocation = await getUserLocation();
-
-                    // Hitung jarak dari lokasi kegiatan
                     const distance = getDistance(
-                        kegiatanLocation.lat,
-                        kegiatanLocation.lng,
+                        eventData.lat,
+                        eventData.lng,
                         userLocation.lat,
                         userLocation.lng
                     );
 
-                    // Simpan koordinat pengguna ke form
+                    // Save coordinates
                     $('#userLatitude').val(userLocation.lat);
                     $('#userLongitude').val(userLocation.lng);
 
-                    // Cek apakah dalam radius yang ditentukan
-                    if (distance > kegiatanLocation.radius) {
-                        // Tampilkan modal error
-                        const modal = new bootstrap.Modal(document.getElementById('locationErrorModal'));
-                        modal.show();
+                    // Check radius
+                    if (distance > eventData.radius) {
+                        new bootstrap.Modal('#locationErrorModal').show();
                         submitBtn.prop('disabled', false);
-                        submitBtn.text('Submit');
+                        submitText.text('Submit Absensi');
+                        submitSpinner.addClass('d-none');
                         return;
                     }
 
-                    // Jika dalam radius, lanjutkan submit form
+                    // Save signature and submit
                     $('#signature64').val(signaturePad.toDataURL());
                     this.submit();
 
@@ -243,8 +361,15 @@
                     console.error("Error:", error);
                     alert("Gagal mendapatkan lokasi. Pastikan izin lokasi diberikan dan GPS aktif.");
                     submitBtn.prop('disabled', false);
-                    submitBtn.text('Submit');
+                    submitText.text('Submit Absensi');
+                    submitSpinner.addClass('d-none');
                 }
+            });
+            
+            // Responsive signature pad
+            window.addEventListener('resize', function() {
+                canvas.width = canvas.offsetWidth;
+                signaturePad.clear(); // Clearing will redraw at new size
             });
         });
     </script>
